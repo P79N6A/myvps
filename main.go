@@ -39,10 +39,11 @@ func main() {
 		os.Exit(1)
 	}
 	beego.LoadAppConfig("ini", *conf)
-	logs.SetLogger(logs.AdapterFile, `{"filename":"log/mywebtools.log"}`)
+	logs.SetLogger(logs.AdapterConsole)
+	// logs.SetLogger(logs.AdapterFile, `{"filename":"log/mywebtools.log"}`)
 	if !*debug {
 		beego.BConfig.RunMode = "prod"
-		logs.SetLevel(logs.LevelDebug)
+		logs.SetLevel(logs.LevelWarn)
 	} else {
 		beego.BConfig.RunMode = "dev"
 		logs.SetLevel(logs.LevelDebug)
