@@ -1,0 +1,2 @@
+subjectAltName = IP:114.80.168.38, IP:180.153.108.83
+extendedKeyUsage = serverAuth, clientAuth
