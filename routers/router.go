@@ -7,6 +7,7 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.MainController{}, "get:Get;post:Post")
+	beego.Router("/ip", &controllers.MainController{}, "get:RemoteIP")
 	beego.Router("/webtools", &controllers.MainController{}, "get:WebTools")
 	ns := beego.NewNamespace("/wt",
 		beego.NSRouter("/", &controllers.MainController{}, "get:IPInfo"),

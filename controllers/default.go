@@ -53,6 +53,10 @@ func (c *MainController) Post() {
 	c.Ctx.WriteString("success")
 }
 
+func (c *MainController) RemoteIP() {
+	c.Ctx.WriteString(strings.Split(c.Ctx.Request.RemoteAddr, ":")[0])
+}
+
 func (c *MainController) WebTools() {
 	f, ex := os.Open(".ipcache")
 	defer f.Close()
