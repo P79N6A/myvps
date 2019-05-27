@@ -2,13 +2,16 @@ package main
 
 import (
 	"flag"
-	"os"
-	"strings"
+	"fmt"
+	"net/http"
+	"strconv"
+	"time"
 
-	_ "./routers"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/xyzj/mxgo"
+	"./lib"
+	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-gonic/gin"
+	"github.com/xyzj/gopsu"
+	ginmiddleware "github.com/xyzj/gopsu/gin-middleware"
 )
 
 var (
@@ -21,43 +24,74 @@ var (
 )
 
 var (
-	conf     = flag.String("conf", "conf/app.conf", "set config file path")
-	usehttps = flag.Bool("usehttps", false, "set if enable https")
-	debug    = flag.Bool("debug", false, "set if log debug msessage")
-	ver      = flag.Bool("version", false, "print version info and exit.")
+	web   = flag.Int("http", 6819, "set port to bind")
+	debug = flag.Bool("debug", false, "set if log debug msessage")
+	ver   = flag.Bool("version", false, "print version info and exit.")
 )
 
+const (
+	httpCertFile = "./ca/http.pem"
+	httpKeyFile  = "./ca/http-key.pem"
+)
+
+// multiRender 预置模板
+func multiRender() multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromString("vpsinfo", lib.TPLVpsinfo)
+	r.AddFromString("404", ginmiddleware.Template404)
+	return r
+}
 func main() {
-	os.MkdirAll("./log", 0775)
 	flag.Parse()
-	if *ver {
-		println(mxgo.VersionInfo(programName, version, goVersion, platform, buildDate, author))
-		os.Exit(1)
-	}
-	if len(strings.TrimSpace(*conf)) == 0 || !mxgo.IsExist(*conf) {
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
-	beego.LoadAppConfig("ini", *conf)
-	logs.SetLogger(logs.AdapterConsole)
-	// logs.SetLogger(logs.AdapterFile, `{"filename":"log/mywebtools.log"}`)
+	var loglevel int
 	if !*debug {
-		beego.BConfig.RunMode = "prod"
-		logs.SetLevel(logs.LevelWarn)
+		gin.SetMode(gin.ReleaseMode)
+		loglevel = 20
 	} else {
-		beego.BConfig.RunMode = "dev"
-		logs.SetLevel(logs.LevelDebug)
-		logs.EnableFuncCallDepth(true)
+		loglevel = 10
 	}
-	logs.Async(10)
-	beego.BConfig.WebConfig.AutoRender = false
-	if *usehttps {
-		beego.BConfig.Listen.EnableHTTPS = true
-		p, _ := beego.AppConfig.Int("httpport")
-		beego.BConfig.Listen.HTTPSAddr = beego.AppConfig.String("httpaddr")
-		beego.BConfig.Listen.HTTPSPort = p + 1
-		beego.BConfig.Listen.HTTPSCertFile = "./ca/server.crt"
-		beego.BConfig.Listen.HTTPSKeyFile = "./ca/server.key"
+
+	r := gin.New()
+	// 中间件
+	// 日志
+	r.Use(ginmiddleware.LoggerWithRolling("", "", 0, loglevel, !*debug, *debug))
+	// 错误恢复
+	r.Use(gin.Recovery())
+	// 渲染模板
+	r.HTMLRender = multiRender()
+	// 基础路由
+	r.GET("/", lib.RemoteIP)
+	r.POST("/", lib.RemoteIP)
+	gwt := r.Group("/wt")
+	gwt.GET("/", lib.IPCache)
+	gwt.GET("/kod", lib.Kod)
+	gwt.GET("/deluge", lib.Deluge)
+	gwt.GET("/mldonkey", lib.Mldonkey)
+	gwt.GET("/ssh", lib.Ssh)
+	goffice := r.Group("/soho")
+	goffice.GET("/", lib.SohoCache)
+	goffice.GET("/kod", lib.SohoKod)
+	// gvps := r.Group("/vps", lib.VpsInfo)
+	r.GET("/vps", lib.VpsInfo)
+	// 错误路由
+	r.NoMethod(ginmiddleware.Page405)
+	r.NoRoute(ginmiddleware.Page404)
+
+	s := &http.Server{
+		Addr:           fmt.Sprintf(":%d", *web),
+		Handler:        r,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
 	}
-	beego.Run()
+	fmt.Fprintln(gin.DefaultWriter, "Success start HTTP(S) server at :"+strconv.Itoa(*web))
+	var err error
+	if gopsu.IsExist(httpCertFile) && gopsu.IsExist(httpKeyFile) {
+		err = s.ListenAndServeTLS(httpCertFile, httpKeyFile)
+	} else {
+		err = s.ListenAndServe()
+	}
+	if err != nil {
+		fmt.Fprintln(gin.DefaultWriter, "Failed start HTTP(S) server at :"+strconv.Itoa(*web)+"|"+err.Error())
+	}
 }

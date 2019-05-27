@@ -21,8 +21,8 @@ if __name__ == "__main__":
         outname, nv, time.ctime(time.time()), gv, pl)
     print(buildcmd)
     os.system(buildcmd)
-    os.system("rm -f mywebtools.tar.gz")
-    os.system(
-        "tar zcf mywebtools.tar.gz --exclude *.conf -C .. myvps/conf myvps/static myvps/views myvps/mywebtools"
-    )
-    os.system("rm -f mywebtools")
+    # os.system("rm -f mywebtools.tar.gz")
+    # os.system(
+    #     "tar zcf mywebtools.tar.gz --exclude *.conf -C .. myvps/conf myvps/static myvps/views myvps/mywebtools"
+    # )
+    # os.system("rm -f mywebtools")
