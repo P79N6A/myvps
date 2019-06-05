@@ -13,7 +13,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -42,7 +42,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -61,7 +61,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -94,7 +94,7 @@ jslite = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -167,9 +167,9 @@ runv2ray = '''#!/bin/bash
 '''
 
 if __name__ == "__main__":
-    u1 = uuid.uuid4().hex
-    u2 = uuid.uuid4().hex
-    u3 = uuid.uuid4().hex
+    u1 = str(uuid.uuid4())
+    u2 = str(uuid.uuid4())
+    u3 = str(uuid.uuid4())
 
     with open("/root/bin/runv2ray.sh", "w") as f:
         f.write(runv2ray)

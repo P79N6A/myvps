@@ -13,7 +13,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -42,7 +42,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -61,7 +61,7 @@ js = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -94,7 +94,7 @@ jslite = '''{
                     {
                         "id": "%s",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-128-gcm"
                     }
                 ]
             },
@@ -161,51 +161,15 @@ defaultnginx = '''server {
 }'''
 
 
-defaultnginxv4 = '''server {
-	# listen 80 default_server;
-	listen [::]:80 default_server;
-
-	# SSL configuration
-	#
-	# listen 443 ssl default_server;
-	# listen [::]:443 ssl default_server;
-
-	root /var/www/html;
-
-	index index.html index.htm index.nginx-debian.html;
-
-	server_name v4.xyzjdays.xyz;
-
-	ssl_certificate       /root/ca/cert.pem;
-	ssl_certificate_key   /root/ca/key.pem;
-	ssl_protocols         TLSv1 TLSv1.1 TLSv1.2;
-	ssl_ciphers           HIGH:!aNULL:!MD5;
-
-	location /xx { # 与 V2Ray 配置中的 path 保持一致
-	        proxy_redirect off;
-	        proxy_pass http://127.0.0.1:6891;#假设WebSocket监听在环回地址的10000端口上
-	        proxy_http_version 1.1;
-	        proxy_set_header Upgrade $http_upgrade;
-	        proxy_set_header Connection "upgrade";
-	        proxy_set_header Host $http_host;
-        }
-        
-	location / {
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying a 404.
-		try_files $uri $uri/ =404;
-	}
-}'''
-
 runv2ray = '''#!/bin/bash 
 
 /usr/bin/v2ray/v2ray -config=/root/conf/v2rays.json
 '''
 
 if __name__ == "__main__":
-    u1 = uuid.uuid4().hex
-    u2 = uuid.uuid4().hex
-    u3 = uuid.uuid4().hex
+    u1 = str(uuid.uuid4())
+    u2 = str(uuid.uuid4())
+    u3 = str(uuid.uuid4())
 
     with open("/root/bin/runv2ray.sh", "w") as f:
         f.write(runv2ray)

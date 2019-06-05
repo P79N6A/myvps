@@ -36,7 +36,7 @@
                     {
                         "id": "69752b60-874b-11e9-94bf-000af77ee246",
                         "alterId": 6,
-                        "security": "auto"
+                        "security": "aes-"
                     }
                 ]
             },

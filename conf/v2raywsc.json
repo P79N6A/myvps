@@ -19,16 +19,16 @@
     ],
     "outbounds": [
         {
-            "tag": "direct",
+            "tag": "proxy",
             "protocol": "vmess",
             "settings": {
                 "vnext": [
                     {
-                        "address": "v6.xyzjdays.xyz",
+                        "address": "ipv6.xyzjdays.xyz",
                         "port": 443,
                         "users": [
                             {
-                                "id": "f11a3b20-869a-11e9-91e2-aaaa000ef3c9",
+                                "id": "51d1a61695ee4ccebe522a0efcdc19d8",
                                 "alterId": 6
                             }
                         ]
