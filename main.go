@@ -43,18 +43,14 @@ func multiRender() multitemplate.Renderer {
 }
 func main() {
 	flag.Parse()
-	var loglevel int
 	if !*debug {
 		gin.SetMode(gin.ReleaseMode)
-		loglevel = 20
-	} else {
-		loglevel = 10
 	}
 
 	r := gin.New()
 	// 中间件
 	// 日志
-	r.Use(ginmiddleware.LoggerWithRolling("", "", 0, loglevel, !*debug, *debug))
+	// r.Use(ginmiddleware.LoggerWithRolling("", "", 0, loglevel, !*debug, *debug))
 	// 错误恢复
 	r.Use(gin.Recovery())
 	// 渲染模板
@@ -71,8 +67,9 @@ func main() {
 	goffice := r.Group("/soho")
 	goffice.GET("/", lib.SohoCache)
 	goffice.GET("/kod", lib.SohoKod)
-	// gvps := r.Group("/vps", lib.VpsInfo)
-	r.GET("/vps", lib.VpsInfo)
+	gvps := r.Group("/vps")
+	gvps.GET("/", lib.Vps)
+	gvps.GET("/v4info", lib.VpsInfo)
 	// 错误路由
 	r.NoMethod(ginmiddleware.Page405)
 	r.NoRoute(ginmiddleware.Page404)

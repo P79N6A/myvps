@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +15,7 @@ import (
 
 const (
 	bwhStatusURL = "https://api.64clouds.com/v1/getServiceInfo?veid=%s&api_key=%s"
-	bwhAPIKey    = "42Xjj9rD6ZN45lubxhYV0mFah3ZvX7kqRvKVLjrQAINUKOzzQMR7Tlm/M1XrXmtl+ZT00lAmZsUQ48tb3JYbHmw"
+	bwhAPIKey    = "yfCUSxAg5fs9DMzQntChzNkPneEsvMm5bMo+iuDt9Zr0itwcP3vSrMDOfeCovNA0igyKy2z1bKy8CxsQTYCNexa"
 	bwhVeid      = "979913"
 )
 
@@ -25,11 +24,12 @@ func RemoteIP(c *gin.Context) {
 	case "GET":
 		c.String(200, strings.Split(c.Request.RemoteAddr, ":")[0])
 	case "POST":
-		f, ex := os.OpenFile(".ipcache", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-		defer f.Close()
-		if ex == nil {
-			f.WriteString(strings.Split(c.Request.RemoteAddr, ":")[0])
-		}
+		ioutil.WriteFile(".ipcache", []byte(strings.Split(c.Request.RemoteAddr, ":")[0]), 0644)
+		// f, ex := os.OpenFile(".ipcache", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+		// defer f.Close()
+		// if ex == nil {
+		// 	f.WriteString(strings.Split(c.Request.RemoteAddr, ":")[0])
+		// }
 		c.String(200, "success")
 	}
 }
@@ -41,22 +41,22 @@ func IPCache(c *gin.Context) {
 
 func Ssh(c *gin.Context) {
 	b, _ := ioutil.ReadFile(".ipcache")
-	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:1983/ssh/host/127.0.0.1", strings.TrimSpace(string(b))))
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:6896/ssh/host/127.0.0.1", strings.TrimSpace(string(b))))
 }
 
 func Kod(c *gin.Context) {
 	b, _ := ioutil.ReadFile(".ipcache")
-	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:1981", strings.TrimSpace(string(b))))
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:6895", strings.TrimSpace(string(b))))
 }
 
 func Deluge(c *gin.Context) {
 	b, _ := ioutil.ReadFile(".ipcache")
-	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:1980", strings.TrimSpace(string(b))))
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:6892", strings.TrimSpace(string(b))))
 }
 
 func Mldonkey(c *gin.Context) {
 	b, _ := ioutil.ReadFile(".ipcache")
-	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:1982", strings.TrimSpace(string(b))))
+	c.Redirect(http.StatusMovedPermanently, fmt.Sprintf("http://%s:6893", strings.TrimSpace(string(b))))
 }
 
 func VpsInfo(c *gin.Context) {
@@ -100,4 +100,9 @@ func SohoCache(c *gin.Context) {
 
 func SohoKod(c *gin.Context) {
 	c.Redirect(http.StatusMovedPermanently, "http://180.167.245.233:20080")
+}
+
+func Vps(c *gin.Context) {
+	c.String(200, "23.105.208.62<br>207.246.127.213<br>2001:19f0:5:5573:5400:02ff:fe14:c0d1")
+
 }
