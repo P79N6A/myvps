@@ -1,0 +1,57 @@
+{
+    "inbounds": [
+        {
+            "port": 6890,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "4be95e4a-874b-11e9-b38d-56000214c0d1",
+                        "alterId": 6,
+                        "security": "auto"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "mkcp",
+                "kcpSettings": {
+                    "mtu": 1350,
+                    "tti": 20,
+                    "uplinkCapacity": 5,
+                    "downlinkCapacity": 20,
+                    "congestion": true,
+                    "readBufferSize": 1,
+                    "writeBufferSize": 1,
+                    "header": {
+                        "type": "utp"
+                    }
+                }
+            }
+        },
+        {
+            "port": 6891,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "69752b60-874b-11e9-94bf-000af77ee246",
+                        "alterId": 6,
+                        "security": "auto"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/xx"
+                }
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {}
+        }
+    ]
+}
