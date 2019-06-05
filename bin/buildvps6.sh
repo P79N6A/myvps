@@ -6,20 +6,18 @@ mkdir -p $HOME/confs
 mkdir -p $HOME/bin
 
 echo "apt install"
-apt install -y nginx curl socat
+apt install -y nginx curl socat nano
 # apt install -y miredo miredo-server
 
 echo "install acme"
 curl https://get.acme.sh | sh
 
 echo "install v2ray"
-curl https://install.direct/go.sh | sh
+bash <(curl -L -s https://install.direct/go.sh)
 
 echo "copy config"
-curl https://raw.githubusercontent.com/xyzj/docker-vps/master/buildfiles/confs/default.nginx > /etc/nginx/sites-avaiable/default
-curl https://raw.githubusercontent.com/xyzj/docker-vps/master/buildfiles/bin/v2ray.sh > $HOME/bin/runv2ray.sh
 chmod +x $HOME/bin/*
-/root/bin/confv2ray.py $1
+/root/myvps/bin/confv2ray.py $1
 
 echo "make https"
 $HOME/.acme.sh/acme.sh --issue -d v6.xyzjdays.xyz -w /var/www/html --ecc --keylength ec-256
