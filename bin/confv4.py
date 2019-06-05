@@ -116,13 +116,13 @@ jslite = '''{
 '''
 
 defaultnginx = '''server {
-	# listen 80 default_server;
-	listen [::]:80 default_server;
+	listen 80 default_server;
+	# listen [::]:80 default_server;
 
 	# SSL configuration
 	#
-	# listen 443 ssl default_server;
-	listen [::]:443 ssl default_server;
+	listen 443 ssl default_server;
+	# listen [::]:443 ssl default_server;
 
 	root /var/www/html;
 
