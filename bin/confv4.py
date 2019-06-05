@@ -128,7 +128,7 @@ defaultnginx = '''server {
 
 	index index.html index.htm index.nginx-debian.html;
 
-	server_name v6.xyzjdays.xyz;
+	server_name v4.xyzjdays.xyz;
 
 	ssl_certificate       /root/ca/cert.pem;
 	ssl_certificate_key   /root/ca/key.pem;
