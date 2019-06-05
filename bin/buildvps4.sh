@@ -2,7 +2,7 @@
 
 echo "mkdir"
 mkdir -p $HOME/ca
-mkdir -p $HOME/confs
+mkdir -p $HOME/conf
 mkdir -p $HOME/bin
 
 echo "apt install"
@@ -17,7 +17,7 @@ bash <(curl -L -s https://install.direct/go.sh)
 
 echo "copy config"
 chmod +x $HOME/bin/*
-/root/myvps/bin/confv2ray.py $1
+/root/myvps/bin/confv4.py $1
 
 echo "make https"
 $HOME/.acme.sh/acme.sh --issue -d v4.xyzjdays.xyz -w /var/www/html --ecc --keylength ec-256
